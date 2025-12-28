@@ -4,6 +4,10 @@
 
 An interactive educational web application designed for 9th-10th grade students to learn about real numbers, rational and irrational numbers, and mathematical proofs in Bengali.
 
+## 🚀 Live Demo
+
+**[View Live Demo](https://sheikhsulaiman.github.io/real-number-teaching-aid/)**
+
 ## ✨ Features
 
 ### 📊 Interactive Number Line
