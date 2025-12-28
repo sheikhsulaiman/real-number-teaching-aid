@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="bn">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>বাস্তব সংখ্যা - শিক্ষা সহায়ক</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Segoe UI", Tahoma, sans-serif;
+        background: #f0f4f8;
+        min-height: 100vh;
+        padding: 20px;
+      }
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+      header {
+        text-align: center;
+        color: #1e3a8a;
+        margin-bottom: 30px;
+        animation: fadeInDown 0.8s ease;
+      }
+      h1 {
+        font-size: 2.5em;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+      .tabs {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+      }
+      .tab-button {
+        background: white;
+        color: #2563eb;
+        border: 2px solid #2563eb;
+        padding: 15px 30px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 1.1em;
+        transition: all 0.3s ease;
+      }
+      .tab-button:hover {
+        background: #eff6ff;
+        transform: translateY(-2px);
+      }
+      .tab-button.active {
+        background: #2563eb;
+        color: white;
+        font-weight: bold;
+      }
+      .tab-content {
+        display: none;
+        animation: fadeIn 0.5s ease;
+      }
+      .tab-content.active {
+        display: block;
+      }
+      .card {
+        background: white;
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        margin-bottom: 20px;
+      }
+      .card-header {
+        font-size: 1.8em;
+        color: #1e40af;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 3px solid #2563eb;
+      }
+      .number-line-container {
+        background: #f8f9fa;
+        padding: 30px;
+        border-radius: 15px;
+        margin: 20px 0;
+      }
+      .controls {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 30px;
+        flex-wrap: wrap;
+        align-items: flex-end;
+      }
+      .control-group {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+      .control-group label {
+        font-weight: bold;
+        color: #1e40af;
+      }
+      input,
+      select {
+        padding: 10px;
+        border: 2px solid #2563eb;
+        border-radius: 8px;
+        font-size: 1em;
+        min-width: 120px;
+      }
+      button {
+        background: #2563eb;
+        color: white;
+        padding: 12px 25px;
+        border: none;
+        border-radius: 10px;
+        font-size: 1em;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+      button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 5px 15px rgba(37, 99, 235, 0.4);
+      }
+      .canvas-container {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        margin: 20px 0;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        overflow-x: auto;
+      }
+      canvas {
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        display: block;
+      }
+      .number-info {
+        background: #dbeafe;
+        padding: 20px;
+        border-radius: 10px;
+        margin-top: 20px;
+        display: none;
+      }
+      .number-info.show {
+        display: block;
+        animation: slideIn 0.3s ease;
+      }
+      .plotted-numbers {
+        background: white;
+        padding: 15px;
+        border-radius: 8px;
+        margin-top: 15px;
+      }
+      .number-badge {
+        display: inline-block;
+        padding: 8px 15px;
+        margin: 5px;
+        border-radius: 20px;
+        font-weight: bold;
+      }
+      .rational {
+        background: #4caf50;
+        color: white;
+      }
+      .irrational {
+        background: #ff9800;
+        color: white;
+      }
+      .proof-step {
+        background: white;
+        padding: 25px;
+        margin: 15px 0;
+        border-left: 5px solid #2563eb;
+        border-radius: 10px;
+        opacity: 0;
+        transition: all 0.5s ease;
+      }
+      .proof-step.visible {
+        opacity: 1;
+      }
+      .proof-step h3 {
+        color: #1e40af;
+        margin-bottom: 15px;
+        font-size: 1.3em;
+      }
+      .math-expression {
+        background: #f0f0f0;
+        padding: 15px;
+        border-radius: 8px;
+        font-family: "Courier New", monospace;
+        font-size: 1.2em;
+        margin: 15px 0;
+        text-align: center;
+      }
+      .contradiction-box {
+        background: #fee2e2;
+        padding: 20px;
+        border-radius: 10px;
+        margin: 20px 0;
+        border: 3px solid #dc2626;
+      }
+      .success-box {
+        background: #d1fae5;
+        padding: 20px;
+        border-radius: 10px;
+        margin: 20px 0;
+        text-align: center;
+        font-size: 1.3em;
+        font-weight: bold;
+      }
+      .step-indicator {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        margin: 20px 0;
+      }
+      .step-dot {
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        background: #ddd;
+        transition: all 0.3s ease;
+      }
+      .step-dot.active {
+        background: #2563eb;
+        transform: scale(1.3);
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      @keyframes fadeInDown {
+        from {
+          opacity: 0;
+          transform: translateY(-30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateX(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>🎓 বাস্তব সংখ্যা</h1>
+        <p>ইন্টারেক্টিভ শিক্ষা সহায়ক - শ্রেণি: ৯ম-১০ম</p>
+      </header>
+
+      <div class="tabs">
+        <button class="tab-button active" onclick="switchTab('numberLine')">
+          📊 সংখ্যা রেখা
+        </button>
+        <button class="tab-button" onclick="switchTab('proof')">
+          🔬 √2 প্রমাণ
+        </button>
+      </div>
+
+      <div id="numberLine" class="tab-content active">
+        <div class="card">
+          <div class="card-header">📊 ইন্টারেক্টিভ সংখ্যা রেখা</div>
+          <div class="number-line-container">
+            <div class="controls">
+              <div class="control-group">
+                <label>সংখ্যা নির্বাচন:</label>
+                <select id="numberType">
+                  <option value="custom">নিজের সংখ্যা</option>
+                  <option value="sqrt2">√2</option>
+                  <option value="sqrt3">√3</option>
+                  <option value="pi">π</option>
+                  <option value="0.5">1/2</option>
+                  <option value="0.75">3/4</option>
+                </select>
+              </div>
+              <div class="control-group">
+                <label>সংখ্যা লিখুন:</label>
+                <input type="number" id="customNumber" step="0.001" />
+              </div>
+              <button onclick="plotNumber()">স্থাপন করুন</button>
+              <button onclick="clearNumberLine()" style="background: #f44336">
+                মুছুন
+              </button>
+            </div>
+            <div style="display: flex; gap: 10px; margin-bottom: 20px">
+              <button onclick="zoomIn()">🔍 জুম ইন</button>
+              <button onclick="zoomOut()">🔍 জুম আউট</button>
+              <button onclick="resetZoom()">🔄 রিসেট</button>
+              <span style="font-weight: bold; margin-left: 15px"
+                >জুম: <span id="zoomLevel">1x</span></span
+              >
+            </div>
+            <div class="canvas-container">
+              <canvas id="numberLineCanvas" width="1200" height="200"></canvas>
+            </div>
+            <div id="numberInfo" class="number-info"></div>
+            <div class="plotted-numbers">
+              <h3>স্থাপিত সংখ্যা:</h3>
+              <div id="plottedList"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="proof" class="tab-content">
+        <div class="card">
+          <div class="card-header">🔬 প্রমাণ: √2 অমূলদ</div>
+          <div style="background: #f8f9fa; padding: 30px; border-radius: 15px">
+            <div
+              style="
+                display: flex;
+                gap: 15px;
+                justify-content: center;
+                margin-top: 30px;
+              "
+            >
+              <button onclick="previousStep()">⬅️ আগের</button>
+              <button onclick="nextStep()">পরের ➡️</button>
+              <button onclick="resetProof()" style="background: #ff9800">
+                🔄 শুরু
+              </button>
+            </div>
+            <div class="step-indicator" id="stepIndicator"></div>
+            <div id="proofSteps"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const canvas = document.getElementById("numberLineCanvas");
+      const ctx = canvas.getContext("2d");
+      let zoomFactor = 1,
+        plottedNumbers = [];
+
+      function switchTab(tab) {
+        document
+          .querySelectorAll(".tab-content")
+          .forEach((t) => t.classList.remove("active"));
+        document
+          .querySelectorAll(".tab-button")
+          .forEach((b) => b.classList.remove("active"));
+        document.getElementById(tab).classList.add("active");
+        event.target.classList.add("active");
+      }
+
+      function drawNumberLine() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const cx = canvas.width / 2,
+          cy = canvas.height / 2,
+          scale = 100 * zoomFactor;
+
+        ctx.strokeStyle = "#333";
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(50, cy);
+        ctx.lineTo(canvas.width - 50, cy);
+        ctx.stroke();
+
+        const range = 6 / zoomFactor;
+        for (let i = -range; i <= range; i += 0.5 / zoomFactor) {
+          const x = cx + i * scale;
+          if (x < 40 || x > canvas.width - 40) continue;
+          const isInt = Math.abs(i - Math.round(i)) < 0.01;
+          ctx.lineWidth = isInt ? 2 : 1;
+          ctx.beginPath();
+          ctx.moveTo(x, cy - (isInt ? 15 : 8));
+          ctx.lineTo(x, cy + (isInt ? 15 : 8));
+          ctx.stroke();
+          if (isInt && zoomFactor <= 2) {
+            ctx.fillStyle = "#333";
+            ctx.font = "14px Arial";
+            ctx.textAlign = "center";
+            ctx.fillText(i.toFixed(0), x, cy + 35);
+          }
+        }
+
+        plottedNumbers.forEach((num) => {
+          const x = cx + num.value * scale;
+          if (x < 40 || x > canvas.width - 40) return;
+          ctx.fillStyle = num.isRational ? "#4CAF50" : "#FF9800";
+          ctx.beginPath();
+          ctx.arc(x, cy, 8, 0, 2 * Math.PI);
+          ctx.fill();
+          ctx.font = "bold 14px Arial";
+          ctx.textAlign = "center";
+          ctx.fillText(num.label, x, cy - 20);
+          ctx.font = "12px Arial";
+          ctx.fillText(num.value.toFixed(3), x, cy - 35);
+        });
+      }
+
+      function plotNumber() {
+        const type = document.getElementById("numberType").value;
+        let value, label, isRational;
+
+        if (type === "custom") {
+          value = parseFloat(document.getElementById("customNumber").value);
+          if (isNaN(value)) {
+            alert("সঠিক সংখ্যা লিখুন!");
+            return;
+          }
+          label = value.toString();
+          isRational = true;
+        } else if (type === "sqrt2") {
+          value = Math.sqrt(2);
+          label = "√2";
+          isRational = false;
+        } else if (type === "sqrt3") {
+          value = Math.sqrt(3);
+          label = "√3";
+          isRational = false;
+        } else if (type === "pi") {
+          value = Math.PI;
+          label = "π";
+          isRational = false;
+        } else {
+          value = parseFloat(type);
+          label = type;
+          isRational = true;
+        }
+
+        plottedNumbers.push({ value, label, isRational });
+        drawNumberLine();
+        const info = document.getElementById("numberInfo");
+        const t = isRational ? "মূলদ" : "অমূলদ";
+        info.innerHTML = `<p><strong>সংখ্যা:</strong> ${label}</p><p><strong>মান:</strong> ${value.toFixed(
+          6
+        )}</p><p><strong>ধরন:</strong> ${t}</p>`;
+        info.classList.add("show");
+        updateList();
+      }
+
+      function updateList() {
+        const list = document.getElementById("plottedList");
+        list.innerHTML = plottedNumbers
+          .map(
+            (n) =>
+              `<span class="number-badge ${
+                n.isRational ? "rational" : "irrational"
+              }">${n.label} (${n.value.toFixed(3)})</span>`
+          )
+          .join("");
+      }
+
+      function zoomIn() {
+        if (zoomFactor < 5) {
+          zoomFactor += 0.5;
+          document.getElementById("zoomLevel").textContent =
+            zoomFactor.toFixed(1) + "x";
+          drawNumberLine();
+        }
+      }
+      function zoomOut() {
+        if (zoomFactor > 0.5) {
+          zoomFactor -= 0.5;
+          document.getElementById("zoomLevel").textContent =
+            zoomFactor.toFixed(1) + "x";
+          drawNumberLine();
+        }
+      }
+      function resetZoom() {
+        zoomFactor = 1;
+        document.getElementById("zoomLevel").textContent = "1x";
+        drawNumberLine();
+      }
+      function clearNumberLine() {
+        plottedNumbers = [];
+        document.getElementById("numberInfo").classList.remove("show");
+        drawNumberLine();
+        updateList();
+      }
+
+      let currentStep = 0;
+      const steps = [
+        {
+          title: "ধাপ ১: ধরি",
+          content: "ধরি, √2 একটি মূলদ সংখ্যা।",
+          math: "√2 = p/q",
+          exp: "যেখানে p, q পূর্ণসংখ্যা, q ≠ 0",
+        },
+        {
+          title: "ধাপ ২: বর্গ করি",
+          content: "উভয়পক্ষ বর্গ করলে:",
+          math: "2 = p²/q²<br>2q² = p²",
+          exp: "p² জোড় সংখ্যা",
+        },
+        {
+          title: "ধাপ ৩: p জোড়",
+          content: "যদি p² জোড় হয়, তাহলে p জোড়।",
+          math: "p = 2k",
+          exp: "k একটি পূর্ণসংখ্যা",
+        },
+        {
+          title: "ধাপ ৪: প্রতিস্থাপন",
+          content: "p = 2k বসিয়ে:",
+          math: "2q² = 4k²<br>q² = 2k²",
+          exp: "q² ও জোড়, তাই q জোড়",
+        },
+        {
+          title: "ধাপ ৫: দ্বন্দ্ব",
+          content: "p ও q উভয়ই জোড়!",
+          math: "",
+          exp: "কিন্তু আমরা বলেছিলাম p/q সরলতম! এটি অসম্ভব!",
+          box: "contradiction",
+        },
+        {
+          title: "উপসংহার",
+          content: "এই দ্বন্দ্ব প্রমাণ করে:",
+          math: "∴ √2 অমূলদ",
+          exp: "√2 কে p/q আকারে লেখা যায় না",
+          box: "success",
+        },
+      ];
+
+      function initProof() {
+        document.getElementById("stepIndicator").innerHTML = steps
+          .map(
+            (_, i) =>
+              `<div class="step-dot ${
+                i === 0 ? "active" : ""
+              }" id="dot${i}"></div>`
+          )
+          .join("");
+        document.getElementById("proofSteps").innerHTML = steps
+          .map((s, i) => {
+            let box = "";
+            if (s.box === "contradiction")
+              box =
+                '<div class="contradiction-box"><p style="font-weight: bold; color: #c62828;">⚠️ দ্বন্দ্ব! অসম্ভব!</p></div>';
+            if (s.box === "success")
+              box = '<div class="success-box">✅ প্রমাণিত!</div>';
+            return `<div class="proof-step ${
+              i === 0 ? "visible" : ""
+            }" id="step${i}">
+                    <h3>${s.title}</h3><p>${s.content}</p>
+                    ${
+                      s.math
+                        ? `<div class="math-expression">${s.math}</div>`
+                        : ""
+                    }
+                    <p>${s.exp}</p>${box}</div>`;
+          })
+          .join("");
+      }
+
+      function nextStep() {
+        if (currentStep < steps.length - 1) {
+          currentStep++;
+          document
+            .getElementById(`step${currentStep}`)
+            .classList.add("visible");
+          document.getElementById(`dot${currentStep}`).classList.add("active");
+        }
+      }
+
+      function previousStep() {
+        if (currentStep > 0) {
+          document
+            .getElementById(`step${currentStep}`)
+            .classList.remove("visible");
+          document
+            .getElementById(`dot${currentStep}`)
+            .classList.remove("active");
+          currentStep--;
+        }
+      }
+
+      function resetProof() {
+        currentStep = 0;
+        document
+          .querySelectorAll(".proof-step")
+          .forEach((s, i) =>
+            i === 0 ? s.classList.add("visible") : s.classList.remove("visible")
+          );
+        document
+          .querySelectorAll(".step-dot")
+          .forEach((d, i) =>
+            i === 0 ? d.classList.add("active") : d.classList.remove("active")
+          );
+      }
+
+      drawNumberLine();
+      initProof();
+    </script>
+  </body>
+</html>
