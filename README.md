@@ -36,16 +36,9 @@ An interactive educational web application designed for 9th-10th grade students 
 
 Watch this comprehensive video tutorial to see the application in action and learn how to use all its features:
 
-<!-- Add your video embed code below -->
-<!--
-Example for YouTube:
-<iframe width="560" height="315" src="https://www.youtube.com/embed/YOUR_VIDEO_ID" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
-Or use markdown format:
-[![Video Tutorial](https://img.youtube.com/vi/YOUR_VIDEO_ID/maxresdefault.jpg)](https://www.youtube.com/watch?v=YOUR_VIDEO_ID)
--->
+https://github.com/user-attachments/assets/92584780-1841-4f62-99bf-8f0365493dab
 
-**Video coming soon!** 🎬
 
 ## 🚀 Getting Started
 
